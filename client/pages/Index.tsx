@@ -90,7 +90,7 @@ export default function Index() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-retro-800 to-retro-600 bg-clip-text text-transparent">
-                  Waxworm Egg Logger
+                  Hornworm Egg Logger
                 </h1>
                 <p className="text-sm text-retro-600 flex items-center gap-1">
                   <Sparkles className="h-3 w-3" />
