@@ -1,13 +1,19 @@
 import React from "react";
-import { Bug, TrendingUp, Calendar, Target, Download } from "lucide-react";
+import {
+  Bug,
+  TrendingUp,
+  Calendar,
+  Target,
+  Download,
+  Sparkles,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { EggLogForm } from "@/components/EggLogForm";
 import { WeeklyStats } from "@/components/WeeklyStats";
-import { GoalSetting } from "@/components/GoalSetting";
-import { TrendsChart } from "@/components/TrendsChart";
+import { TabsSection } from "@/components/TabsSection";
 import { useEggLogData } from "@/hooks/use-egg-log-data";
 import { formatNumber, formatGrams } from "@/lib/waxworm-utils";
 
@@ -63,38 +69,39 @@ export default function Index() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-retro-50 via-white to-neon-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin h-8 w-8 border-4 border-emerald-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-emerald-600">Loading your egg logs...</p>
+          <div className="animate-spin h-8 w-8 border-4 border-retro-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-retro-600 font-medium">Loading your egg logs...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100">
+    <div className="min-h-screen bg-gradient-to-br from-retro-50 via-white to-neon-50">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-emerald-200 sticky top-0 z-10">
+      <header className="bg-white/90 backdrop-blur-md border-b border-retro-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-600 rounded-lg">
+              <div className="p-2 bg-gradient-to-br from-retro-600 to-retro-500 rounded-xl shadow-lg">
                 <Bug className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-emerald-800">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-retro-800 to-retro-600 bg-clip-text text-transparent">
                   Waxworm Egg Logger
                 </h1>
-                <p className="text-sm text-emerald-600">
-                  Track your egg collections and goals
+                <p className="text-sm text-retro-600 flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Track your collections with style
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-4">
               <Badge
                 variant="outline"
-                className="bg-emerald-50 text-emerald-700"
+                className="bg-retro-50 text-retro-700 border-retro-300"
               >
                 {totalStats.entryCount} collections
               </Badge>
@@ -102,7 +109,7 @@ export default function Index() {
                 onClick={handleExportToGoogleSheets}
                 variant="outline"
                 size="sm"
-                className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
+                className="border-retro-200 text-retro-700 hover:bg-retro-50 hover:border-retro-300"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export CSV
@@ -114,43 +121,48 @@ export default function Index() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Collection Form - Moved to Top */}
+        <div className="mb-8">
+          <EggLogForm onSubmit={addEntry} />
+        </div>
+
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="bg-white/90 backdrop-blur-sm border-emerald-200">
+          <Card className="bg-white/95 backdrop-blur-sm border-retro-200 shadow-lg">
             <CardHeader className="pb-3">
-              <CardTitle className="text-emerald-700 text-lg flex items-center gap-2">
+              <CardTitle className="text-retro-700 text-lg flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
                 Total Collections
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
-                <p className="text-3xl font-bold text-emerald-800">
+                <p className="text-3xl font-bold bg-gradient-to-r from-retro-800 to-retro-600 bg-clip-text text-transparent">
                   {formatGrams(totalStats.totalGrams)}
                 </p>
-                <p className="text-sm text-emerald-600">
+                <p className="text-sm text-retro-600">
                   {formatNumber(totalStats.totalEggs)} eggs total
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/90 backdrop-blur-sm border-emerald-200">
+          <Card className="bg-white/95 backdrop-blur-sm border-neon-200 shadow-lg">
             <CardHeader className="pb-3">
-              <CardTitle className="text-emerald-700 text-lg flex items-center gap-2">
+              <CardTitle className="text-neon-700 text-lg flex items-center gap-2">
                 <Target className="h-5 w-5" />
                 Weekly Goal
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
-                <p className="text-3xl font-bold text-emerald-800">
+                <p className="text-3xl font-bold bg-gradient-to-r from-neon-800 to-neon-600 bg-clip-text text-transparent">
                   {goalSettings.weeklyGoalGrams > 0
                     ? formatGrams(goalSettings.weeklyGoalGrams)
                     : "Not Set"}
                 </p>
                 {goalSettings.weeklyGoalGrams > 0 && (
-                  <p className="text-sm text-emerald-600">
+                  <p className="text-sm text-neon-600">
                     {formatNumber(goalSettings.weeklyGoalEggs)} eggs weekly
                   </p>
                 )}
@@ -158,19 +170,19 @@ export default function Index() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/90 backdrop-blur-sm border-emerald-200">
+          <Card className="bg-white/95 backdrop-blur-sm border-retro-200 shadow-lg">
             <CardHeader className="pb-3">
-              <CardTitle className="text-emerald-700 text-lg flex items-center gap-2">
+              <CardTitle className="text-retro-700 text-lg flex items-center gap-2">
                 <TrendingUp className="h-5 w-5" />
                 This Week
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
-                <p className="text-3xl font-bold text-emerald-800">
+                <p className="text-3xl font-bold bg-gradient-to-r from-retro-800 to-retro-600 bg-clip-text text-transparent">
                   {formatGrams(currentWeekStats.totalGrams)}
                 </p>
-                <p className="text-sm text-emerald-600">
+                <p className="text-sm text-retro-600">
                   {currentWeekStats.progressPercentage}% of goal
                 </p>
               </div>
@@ -179,33 +191,33 @@ export default function Index() {
         </div>
 
         {/* Main Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Forms */}
-          <div className="space-y-6">
-            <EggLogForm onSubmit={addEntry} />
-            <GoalSetting
-              currentGoal={goalSettings.weeklyGoalGrams}
-              onSave={updateGoal}
-            />
-          </div>
-
-          {/* Middle Column - Weekly Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Weekly Stats */}
           <div>
             <WeeklyStats stats={currentWeekStats} />
           </div>
 
-          {/* Right Column - Trends */}
+          {/* Right Column - Tabs (Goals & Analytics) */}
           <div>
-            <TrendsChart data={trendData} />
+            <TabsSection
+              currentGoal={goalSettings.weeklyGoalGrams}
+              onSaveGoal={updateGoal}
+              trendData={trendData}
+            />
           </div>
         </div>
 
         {/* Footer */}
-        <Separator className="my-12 bg-emerald-200" />
-        <footer className="text-center text-sm text-emerald-600">
-          <p>Waxworm Egg Logger - Tracking your collections with precision</p>
-          <p className="mt-1 text-xs text-emerald-500">
-            1 gram = 650 eggs • Data stored locally in your browser
+        <Separator className="my-12 bg-gradient-to-r from-retro-200 via-neon-200 to-retro-200" />
+        <footer className="text-center text-sm text-retro-600">
+          <p className="flex items-center justify-center gap-2">
+            <Sparkles className="h-4 w-4 text-retro-400" />
+            Waxworm Egg Logger - Tracking collections with retro style
+            <Sparkles className="h-4 w-4 text-neon-400" />
+          </p>
+          <p className="mt-2 text-xs text-retro-500">
+            1 gram = 650 eggs • Data stored locally in your browser • Built with
+            ❤️
           </p>
         </footer>
       </main>
