@@ -35,16 +35,16 @@ export function GoalSetting({
   const eggCount = gramsToEggs(goalValue);
 
   return (
-    <Card className="border-emerald-200 shadow-md">
+    <Card className="border-retro-200 shadow-lg bg-gradient-to-br from-white to-retro-50">
       <CardHeader className="pb-4">
-        <CardTitle className="text-emerald-800 flex items-center gap-2">
+        <CardTitle className="text-retro-800 flex items-center gap-2">
           <Target className="h-5 w-5" />
           Weekly Goal
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="goal" className="text-emerald-700">
+          <Label htmlFor="goal" className="text-retro-700">
             Target (grams per week)
           </Label>
           <Input
@@ -55,10 +55,10 @@ export function GoalSetting({
             value={goalInput}
             onChange={(e) => handleInputChange(e.target.value)}
             placeholder="Enter weekly goal in grams"
-            className="border-emerald-200 focus:border-emerald-400"
+            className="border-retro-200 focus:border-retro-400 focus:ring-retro-400"
           />
           {goalValue > 0 && (
-            <p className="text-sm text-emerald-600">
+            <p className="text-sm text-retro-600 font-medium">
               ≈ {eggCount.toLocaleString()} eggs per week
             </p>
           )}
@@ -67,15 +67,15 @@ export function GoalSetting({
         <Button
           onClick={handleSave}
           disabled={!hasChanges || isLoading}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+          className="w-full bg-gradient-to-r from-retro-600 to-retro-500 hover:from-retro-700 hover:to-retro-600 text-white shadow-lg"
         >
           <Save className="h-4 w-4 mr-2" />
           {isLoading ? "Saving..." : "Save Goal"}
         </Button>
 
         {currentGoal > 0 && !hasChanges && (
-          <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-200">
-            <p className="text-sm text-emerald-700">
+          <div className="text-center p-3 bg-retro-50 rounded-lg border border-retro-200">
+            <p className="text-sm text-retro-700">
               Current goal: <strong>{currentGoal}g</strong> (
               {gramsToEggs(currentGoal).toLocaleString()} eggs) per week
             </p>
