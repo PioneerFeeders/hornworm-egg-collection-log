@@ -10,7 +10,6 @@ import {
 
 const STORAGE_KEY = "waxworm_egg_logs";
 const GOAL_STORAGE_KEY = "waxworm_goals";
-const SHEETS_CONFIG_KEY = "google_sheets_config";
 
 export function useEggLogData() {
   const [entries, setEntries] = useState<EggLogEntry[]>([]);
@@ -20,20 +19,12 @@ export function useEggLogData() {
     isActive: false,
   });
   const [isLoading, setIsLoading] = useState(true);
-  const [googleSheetsConfig, setGoogleSheetsConfig] = useState<{
-    isConnected: boolean;
-    sheetUrl?: string;
-    webhookUrl?: string;
-  }>({
-    isConnected: false,
-  });
 
   // Load data from localStorage on mount
   useEffect(() => {
     try {
       const savedEntries = localStorage.getItem(STORAGE_KEY);
       const savedGoals = localStorage.getItem(GOAL_STORAGE_KEY);
-      const savedSheetsConfig = localStorage.getItem(SHEETS_CONFIG_KEY);
 
       if (savedEntries) {
         const parsedEntries = JSON.parse(savedEntries);
@@ -72,10 +63,6 @@ export function useEggLogData() {
         };
         setGoalSettings(defaultGoal);
       }
-
-      if (savedSheetsConfig) {
-        setGoogleSheetsConfig(JSON.parse(savedSheetsConfig));
-      }
     } catch (error) {
       console.error("Error loading saved data:", error);
     } finally {
@@ -97,53 +84,9 @@ export function useEggLogData() {
     }
   }, [goalSettings, isLoading]);
 
-  // Save Google Sheets config to localStorage whenever it changes
-  useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem(
-        SHEETS_CONFIG_KEY,
-        JSON.stringify(googleSheetsConfig),
-      );
-    }
-  }, [googleSheetsConfig, isLoading]);
-
-  // Sync entry to Google Sheets
-  const syncToGoogleSheets = useCallback(
-    async (entry: EggLogEntry, action: "CREATE" | "UPDATE" | "DELETE") => {
-      if (!googleSheetsConfig.isConnected || !googleSheetsConfig.webhookUrl) {
-        return;
-      }
-
-      try {
-        // Use automatic Google Sheets integration
-        const { syncToGoogleSheetsAuto } = await import(
-          "@/lib/google-sheets-auto"
-        );
-
-        const result = await syncToGoogleSheetsAuto(
-          {
-            sheetUrl: googleSheetsConfig.sheetUrl || "",
-            webhookUrl: googleSheetsConfig.webhookUrl,
-          },
-          entry,
-          action,
-        );
-
-        if (result.success) {
-          console.log(`✅ ${result.message}`);
-        } else {
-          console.error(`❌ ${result.message}`);
-        }
-      } catch (error) {
-        console.error("Error syncing to Google Sheets:", error);
-      }
-    },
-    [googleSheetsConfig],
-  );
-
   // Add new entry
   const addEntry = useCallback(
-    async (entryData: Omit<EggLogEntry, "id" | "createdAt">) => {
+    (entryData: Omit<EggLogEntry, "id" | "createdAt">) => {
       const newEntry: EggLogEntry = {
         ...entryData,
         id: generateId(),
@@ -151,13 +94,11 @@ export function useEggLogData() {
       };
 
       setEntries((prev) => [...prev, newEntry]);
-
-      // Sync to Google Sheets
-      await syncToGoogleSheets(newEntry, "CREATE");
+      console.log("✅ Entry added successfully:", newEntry);
 
       return newEntry;
     },
-    [syncToGoogleSheets],
+    [],
   );
 
   // Update goal
@@ -199,32 +140,25 @@ export function useEggLogData() {
   }, [entries]);
 
   // Edit entry
-  const editEntry = useCallback(
-    async (updatedEntry: EggLogEntry) => {
-      setEntries((prev) =>
-        prev.map((entry) =>
-          entry.id === updatedEntry.id ? updatedEntry : entry,
-        ),
-      );
-
-      // Sync to Google Sheets
-      await syncToGoogleSheets(updatedEntry, "UPDATE");
-    },
-    [syncToGoogleSheets],
-  );
+  const editEntry = useCallback((updatedEntry: EggLogEntry) => {
+    setEntries((prev) =>
+      prev.map((entry) =>
+        entry.id === updatedEntry.id ? updatedEntry : entry,
+      ),
+    );
+    console.log("✅ Entry updated successfully:", updatedEntry);
+  }, []);
 
   // Delete entry
   const deleteEntry = useCallback(
-    async (id: string) => {
+    (id: string) => {
       const entryToDelete = entries.find((entry) => entry.id === id);
       if (!entryToDelete) return;
 
       setEntries((prev) => prev.filter((entry) => entry.id !== id));
-
-      // Sync to Google Sheets
-      await syncToGoogleSheets(entryToDelete, "DELETE");
+      console.log("✅ Entry deleted successfully:", entryToDelete);
     },
-    [entries, syncToGoogleSheets],
+    [entries],
   );
 
   // Export data for Google Sheets
@@ -239,44 +173,6 @@ export function useEggLogData() {
 
     return exportEntries;
   }, [entries]);
-
-  // Connect to Google Sheets
-  const connectGoogleSheets = useCallback(
-    async (sheetUrl: string, webhookUrl: string) => {
-      try {
-        // Test webhook connection
-        const { testWebhookConnection } = await import(
-          "@/lib/google-sheets-auto"
-        );
-
-        const webhookWorks = await testWebhookConnection(webhookUrl);
-        if (!webhookWorks) {
-          console.error("Webhook test failed");
-          return false;
-        }
-
-        setGoogleSheetsConfig({
-          isConnected: true,
-          sheetUrl,
-          webhookUrl,
-        });
-
-        console.log("✅ Google Sheets automatic sync connected successfully!");
-        return true;
-      } catch (error) {
-        console.error("Error connecting to Google Sheets:", error);
-        return false;
-      }
-    },
-    [],
-  );
-
-  // Disconnect from Google Sheets
-  const disconnectGoogleSheets = useCallback(() => {
-    setGoogleSheetsConfig({
-      isConnected: false,
-    });
-  }, []);
 
   // Get total collections (all time)
   const getTotalCollections = useCallback(() => {
@@ -297,7 +193,6 @@ export function useEggLogData() {
     // Data
     entries,
     goalSettings,
-    googleSheetsConfig,
     isLoading,
 
     // Actions
@@ -305,8 +200,6 @@ export function useEggLogData() {
     updateGoal,
     editEntry,
     deleteEntry,
-    connectGoogleSheets,
-    disconnectGoogleSheets,
 
     // Computed data
     getCurrentWeekStats,

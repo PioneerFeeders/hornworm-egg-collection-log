@@ -29,9 +29,6 @@ export default function Index() {
     getTrendData,
     getTotalCollections,
     goalSettings,
-    googleSheetsConfig,
-    connectGoogleSheets,
-    disconnectGoogleSheets,
     exportData,
   } = useEggLogData();
 
@@ -203,7 +200,7 @@ export default function Index() {
             <WeeklyStats stats={currentWeekStats} />
           </div>
 
-          {/* Right Column - Tabs (Goals, Analytics, History & Google Sheets) */}
+          {/* Right Column - Tabs (Goals, Analytics, History) */}
           <div>
             <TabsSection
               currentGoal={goalSettings.weeklyGoalGrams}
@@ -212,9 +209,6 @@ export default function Index() {
               entries={entries}
               onEditEntry={editEntry}
               onDeleteEntry={deleteEntry}
-              googleSheetsConfig={googleSheetsConfig}
-              onConnectGoogleSheets={connectGoogleSheets}
-              onDisconnectGoogleSheets={disconnectGoogleSheets}
             />
           </div>
         </div>
