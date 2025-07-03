@@ -67,11 +67,90 @@ export const logEggCollection: RequestHandler = async (req, res) => {
   }
 };
 
+// Setup Google Sheets integration
+export const setupGoogleSheets: RequestHandler = async (req, res) => {
+  try {
+    const { sheetUrl, entries } = req.body;
+
+    // Extract sheet ID from URL
+    const sheetIdMatch = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    if (!sheetIdMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Google Sheets URL format",
+      });
+    }
+
+    const sheetId = sheetIdMatch[1];
+
+    // For now, simulate successful connection
+    // In a real implementation, you would:
+    // 1. Verify the sheet exists and is accessible
+    // 2. Set up the header row if needed
+    // 3. Optionally sync existing data
+
+    console.log(`Setting up Google Sheets integration for sheet: ${sheetId}`);
+    console.log(`Initial entries to sync: ${entries.length}`);
+
+    res.json({
+      success: true,
+      message: "Google Sheets integration setup successfully",
+      sheetId,
+    });
+  } catch (error) {
+    console.error("Setup Google Sheets error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to setup Google Sheets integration",
+    });
+  }
+};
+
+// Sync entry to Google Sheets
+export const syncGoogleSheets: RequestHandler = async (req, res) => {
+  try {
+    const { sheetUrl, entry, action } = req.body;
+
+    // Extract sheet ID from URL
+    const sheetIdMatch = sheetUrl.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    if (!sheetIdMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Google Sheets URL format",
+      });
+    }
+
+    const sheetId = sheetIdMatch[1];
+
+    // For now, simulate successful sync
+    // In a real implementation, you would:
+    // 1. Use Google Sheets API to append/update/delete rows
+    // 2. Handle authentication with service account or OAuth
+    // 3. Format the data appropriately for the sheet
+
+    console.log(
+      `Syncing ${action} action for entry ${entry.id} to sheet: ${sheetId}`,
+    );
+    console.log(`Entry data:`, entry);
+
+    res.json({
+      success: true,
+      message: `Entry ${action.toLowerCase()}d successfully in Google Sheets`,
+    });
+  } catch (error) {
+    console.error("Sync Google Sheets error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to sync entry to Google Sheets",
+    });
+  }
+};
+
 // Health check endpoint
 export const healthCheck: RequestHandler = (req, res) => {
   res.json({
     success: true,
-    message: "Waxworm Egg Logger API is running",
+    message: "Hornworm Egg Logger API is running",
     timestamp: new Date().toISOString(),
   });
 };

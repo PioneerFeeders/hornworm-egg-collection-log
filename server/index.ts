@@ -5,6 +5,8 @@ import {
   exportToGoogleSheets,
   logEggCollection,
   healthCheck,
+  setupGoogleSheets,
+  syncGoogleSheets,
 } from "./routes/egg-logs";
 
 export function createServer() {
@@ -22,10 +24,12 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
-  // Waxworm Egg Logger API routes
+  // Hornworm Egg Logger API routes
   app.get("/api/health", healthCheck);
   app.post("/api/egg-logs", logEggCollection);
   app.post("/api/export/google-sheets", exportToGoogleSheets);
+  app.post("/api/setup-google-sheets", setupGoogleSheets);
+  app.post("/api/sync-google-sheets", syncGoogleSheets);
 
   return app;
 }
