@@ -60,29 +60,40 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
               Goal Progress
             </span>
             <span className="text-sm text-retro-600">
-              {stats.progressPercentage}%
+              {stats.goalGrams > 0
+                ? `${stats.progressPercentage}%`
+                : "No goal set"}
             </span>
           </div>
           <Progress
             value={Math.min(stats.progressPercentage, 100)}
             className="h-3"
           />
-          <div className="flex items-center gap-2">
-            {stats.isAhead ? (
-              <TrendingUp className="h-4 w-4 text-neon-600" />
-            ) : (
-              <TrendingDown className="h-4 w-4 text-orange-500" />
-            )}
-            <span
-              className={cn(
-                "text-sm font-medium",
-                stats.isAhead ? "text-neon-600" : "text-orange-500",
+          {stats.goalGrams > 0 ? (
+            <div className="flex items-center gap-2">
+              {stats.isAhead ? (
+                <TrendingUp className="h-4 w-4 text-neon-600" />
+              ) : (
+                <TrendingDown className="h-4 w-4 text-orange-500" />
               )}
-            >
-              {stats.isAhead ? "Ahead" : "Behind"} by{" "}
-              {formatGrams(stats.difference)}
-            </span>
-          </div>
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  stats.isAhead ? "text-neon-600" : "text-orange-500",
+                )}
+              >
+                {stats.isAhead ? "Ahead" : "Behind"} by{" "}
+                {formatGrams(stats.difference)}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-retro-400" />
+              <span className="text-sm text-retro-500">
+                Set a weekly goal to track progress
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Stats Grid */}
