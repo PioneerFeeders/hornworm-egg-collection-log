@@ -30,28 +30,29 @@ const scheduleData: ScheduleRow[] = [
     actionTaken: "Place harvested eggs in incubator",
     actionIcon: <Thermometer className="h-4 w-4" />,
     actionColor: "text-orange-600 bg-orange-50",
-    nextMovementDay: "Saturday",
-    nextAction: "Harvest from incubator",
-    nextIcon: <Egg className="h-4 w-4" />,
-    nextColor: "text-green-600 bg-green-50",
+    nextMovementDay: "—",
+    nextAction: "Stay in incubator",
+    nextIcon: <Thermometer className="h-4 w-4" />,
+    nextColor: "text-orange-600 bg-orange-50",
   },
   {
     harvestDay: "Wednesday",
-    actionTaken: "Place harvested eggs in incubator",
+    actionTaken:
+      "Place harvested eggs in incubator + Move Monday & Sunday eggs from fridge to incubator",
     actionIcon: <Thermometer className="h-4 w-4" />,
-    actionColor: "text-orange-600 bg-orange-50",
-    nextMovementDay: "Sunday",
-    nextAction: "Harvest from incubator",
-    nextIcon: <Egg className="h-4 w-4" />,
-    nextColor: "text-green-600 bg-green-50",
+    actionColor: "text-purple-600 bg-purple-50",
+    nextMovementDay: "—",
+    nextAction: "Stay in incubator",
+    nextIcon: <Thermometer className="h-4 w-4" />,
+    nextColor: "text-orange-600 bg-orange-50",
   },
   {
     harvestDay: "Thursday",
-    actionTaken: "NO HARVEST - Collect Friday's eggs from incubator",
-    actionIcon: <Egg className="h-4 w-4" />,
-    actionColor: "text-green-600 bg-green-50",
+    actionTaken: "NO HARVEST",
+    actionIcon: <Calendar className="h-4 w-4" />,
+    actionColor: "text-gray-600 bg-gray-50",
     nextMovementDay: "—",
-    nextAction: "Ready for use",
+    nextAction: "No action needed",
     nextIcon: <Calendar className="h-4 w-4" />,
     nextColor: "text-gray-600 bg-gray-50",
   },
@@ -60,18 +61,18 @@ const scheduleData: ScheduleRow[] = [
     actionTaken: "Refrigerate harvested eggs",
     actionIcon: <Snowflake className="h-4 w-4" />,
     actionColor: "text-blue-600 bg-blue-50",
-    nextMovementDay: "Monday",
+    nextMovementDay: "Monday (next week)",
     nextAction: "Move to incubator",
     nextIcon: <Thermometer className="h-4 w-4" />,
     nextColor: "text-orange-600 bg-orange-50",
   },
   {
     harvestDay: "Saturday",
-    actionTaken: "NO HARVEST - Collect Thursday's eggs from incubator",
-    actionIcon: <Egg className="h-4 w-4" />,
-    actionColor: "text-green-600 bg-green-50",
+    actionTaken: "NO HARVEST",
+    actionIcon: <Calendar className="h-4 w-4" />,
+    actionColor: "text-gray-600 bg-gray-50",
     nextMovementDay: "—",
-    nextAction: "Ready for use",
+    nextAction: "No action needed",
     nextIcon: <Calendar className="h-4 w-4" />,
     nextColor: "text-gray-600 bg-gray-50",
   },
@@ -80,7 +81,7 @@ const scheduleData: ScheduleRow[] = [
     actionTaken: "Refrigerate harvested eggs",
     actionIcon: <Snowflake className="h-4 w-4" />,
     actionColor: "text-blue-600 bg-blue-50",
-    nextMovementDay: "Tuesday",
+    nextMovementDay: "Wednesday",
     nextAction: "Move to incubator",
     nextIcon: <Thermometer className="h-4 w-4" />,
     nextColor: "text-orange-600 bg-orange-50",
@@ -252,16 +253,20 @@ export function EggHarvestSchedule() {
           </h3>
           <ul className="text-sm text-yellow-700 space-y-1">
             <li>
-              • <strong>Thursday & Saturday:</strong> NO fresh harvest - collect
-              matured eggs from incubator instead
+              • <strong>Thursday & Saturday:</strong> NO fresh harvest on these
+              days
             </li>
             <li>
-              • <strong>Incubation time:</strong> 4 days (Tuesday → Saturday,
-              Wednesday → Sunday)
+              • <strong>Wednesday is busy:</strong> Fresh harvest + move
+              refrigerated eggs (Monday & Sunday) to incubator
             </li>
             <li>
-              • <strong>Refrigeration:</strong> Slows development for
-              Monday/Friday/Sunday harvests
+              • <strong>Tuesday & Wednesday eggs:</strong> Go straight to
+              incubator and stay there
+            </li>
+            <li>
+              • <strong>Monday, Friday & Sunday eggs:</strong> Start in
+              refrigerator, then move to incubator
             </li>
             <li>
               • <strong>Always label containers</strong> with harvest date and
