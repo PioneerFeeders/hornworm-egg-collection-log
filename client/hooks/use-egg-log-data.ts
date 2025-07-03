@@ -23,6 +23,7 @@ export function useEggLogData() {
   const [googleSheetsConfig, setGoogleSheetsConfig] = useState<{
     isConnected: boolean;
     sheetUrl?: string;
+    webhookUrl?: string;
   }>({
     isConnected: false,
   });
@@ -109,32 +110,29 @@ export function useEggLogData() {
   // Sync entry to Google Sheets
   const syncToGoogleSheets = useCallback(
     async (entry: EggLogEntry, action: "CREATE" | "UPDATE" | "DELETE") => {
-      if (!googleSheetsConfig.isConnected || !googleSheetsConfig.sheetUrl) {
+      if (!googleSheetsConfig.isConnected || !googleSheetsConfig.webhookUrl) {
         return;
       }
 
       try {
-        // Use client-side Google Sheets integration
-        const { syncToGoogleSheets: clientSync } = await import(
-          "@/lib/google-sheets"
+        // Use automatic Google Sheets integration
+        const { syncToGoogleSheetsAuto } = await import(
+          "@/lib/google-sheets-auto"
         );
 
-        const success = await clientSync(
+        const result = await syncToGoogleSheetsAuto(
           {
-            sheetUrl: googleSheetsConfig.sheetUrl,
-            sheetId:
-              googleSheetsConfig.sheetUrl.match(
-                /\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/,
-              )?.[1] || "",
+            sheetUrl: googleSheetsConfig.sheetUrl || "",
+            webhookUrl: googleSheetsConfig.webhookUrl,
           },
           entry,
           action,
         );
 
-        if (!success) {
-          console.error("Failed to prepare entry for Google Sheets sync");
+        if (result.success) {
+          console.log(`✅ ${result.message}`);
         } else {
-          console.log(`Entry prepared for Google Sheets: ${action}`);
+          console.error(`❌ ${result.message}`);
         }
       } catch (error) {
         console.error("Error syncing to Google Sheets:", error);
@@ -244,34 +242,33 @@ export function useEggLogData() {
 
   // Connect to Google Sheets
   const connectGoogleSheets = useCallback(
-    async (sheetUrl: string) => {
+    async (sheetUrl: string, webhookUrl: string) => {
       try {
-        // Test connection by trying to sync existing data
-        const response = await fetch("/api/setup-google-sheets", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            sheetUrl,
-            entries: entries.slice(0, 5), // Send first 5 entries as test
-          }),
+        // Test webhook connection
+        const { testWebhookConnection } = await import(
+          "@/lib/google-sheets-auto"
+        );
+
+        const webhookWorks = await testWebhookConnection(webhookUrl);
+        if (!webhookWorks) {
+          console.error("Webhook test failed");
+          return false;
+        }
+
+        setGoogleSheetsConfig({
+          isConnected: true,
+          sheetUrl,
+          webhookUrl,
         });
 
-        if (response.ok) {
-          setGoogleSheetsConfig({
-            isConnected: true,
-            sheetUrl,
-          });
-          return true;
-        }
-        return false;
+        console.log("✅ Google Sheets automatic sync connected successfully!");
+        return true;
       } catch (error) {
         console.error("Error connecting to Google Sheets:", error);
         return false;
       }
     },
-    [entries],
+    [],
   );
 
   // Disconnect from Google Sheets

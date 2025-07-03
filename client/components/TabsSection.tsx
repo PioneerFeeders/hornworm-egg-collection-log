@@ -18,8 +18,12 @@ interface TabsSectionProps {
   googleSheetsConfig: {
     isConnected: boolean;
     sheetUrl?: string;
+    webhookUrl?: string;
   };
-  onConnectGoogleSheets: (sheetUrl: string) => Promise<boolean>;
+  onConnectGoogleSheets: (
+    sheetUrl: string,
+    webhookUrl: string,
+  ) => Promise<boolean>;
   onDisconnectGoogleSheets: () => void;
   isLoading?: boolean;
 }
@@ -125,6 +129,7 @@ export function TabsSection({
           <GoogleSheetsConfig
             isConnected={googleSheetsConfig.isConnected}
             sheetUrl={googleSheetsConfig.sheetUrl}
+            webhookUrl={googleSheetsConfig.webhookUrl}
             onConnect={onConnectGoogleSheets}
             onDisconnect={onDisconnectGoogleSheets}
           />
