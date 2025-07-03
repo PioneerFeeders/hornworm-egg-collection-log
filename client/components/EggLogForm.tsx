@@ -15,7 +15,12 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { gramsToEggs } from "@/lib/waxworm-utils";
-import { getPlacementInstructions, canHarvestOnDate, getDayName, isOffScheduleHarvest } from "@/lib/placement-instructions";
+import {
+  getPlacementInstructions,
+  canHarvestOnDate,
+  getDayName,
+  isOffScheduleHarvest,
+} from "@/lib/placement-instructions";
 import { EggLogEntry } from "@shared/api";
 
 interface EggLogFormProps {
@@ -103,7 +108,9 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
           {/* Placement Instructions */}
           <div className="space-y-3">
-            <div className={`p-4 rounded-lg border-2 ${placementInstructions.bgColor}`}>
+            <div
+              className={`p-4 rounded-lg border-2 ${placementInstructions.bgColor}`}
+            >
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">{placementInstructions.icon}</span>
                 <h3 className={`font-bold ${placementInstructions.color}`}>
@@ -115,62 +122,70 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                 <Alert className="border-yellow-200 bg-yellow-50">
                   <AlertTriangle className="h-4 w-4 text-yellow-600" />
                   <AlertDescription className="text-yellow-700">
-                    <strong>Off-schedule harvest on {dayName}!</strong> Defaulting to refrigerator storage for flexible timing.
+                    <strong>Off-schedule harvest on {dayName}!</strong>{" "}
+                    Defaulting to refrigerator storage for flexible timing.
                   </AlertDescription>
                 </Alert>
               )}
 
-              {(
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-2">
-                      <Package className="h-4 w-4" />
-                      <div>
-                        <div className={`text-sm font-semibold ${placementInstructions.color}`}>
-                          {placementInstructions.container}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {placementInstructions.temperature}
-                        </div>
+              <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Package className="h-4 w-4" />
+                    <div>
+                      <div
+                        className={`text-sm font-semibold ${placementInstructions.color}`}
+                      >
+                        {placementInstructions.container}
                       </div>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      <div>
-                        <div className={`text-sm font-semibold ${placementInstructions.color}`}>
-                          {placementInstructions.duration}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {placementInstructions.nextAction}
-                        </div>
+                      <div className="text-xs text-gray-600">
+                        {placementInstructions.temperature}
                       </div>
                     </div>
                   </div>
 
-                  {placementInstructions.nextActionDate !== "No movement needed" && (
-                    <div className="text-sm text-gray-700">
-                      <strong>Next movement:</strong> {placementInstructions.nextAction} on{" "}
-                      <span className="font-semibold">{placementInstructions.nextActionDate}</span>
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    <div>
+                      <div
+                        className={`text-sm font-semibold ${placementInstructions.color}`}
+                      >
+                        {placementInstructions.duration}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {placementInstructions.nextAction}
+                      </div>
                     </div>
-                  )}
-
-                  {placementInstructions.urgent && (
-                    <Alert className="border-purple-200 bg-purple-50">
-                      <AlertTriangle className="h-4 w-4 text-purple-600" />
-                      <AlertDescription className="text-purple-700">
-                        <strong>Busy Day Alert!</strong> Extra tasks needed today.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-
-                  {placementInstructions.additionalNotes && (
-                    <div className="text-xs text-gray-600 italic bg-white/50 p-2 rounded">
-                      💡 <strong>Note:</strong> {placementInstructions.additionalNotes}
-                    </div>
-                  )}
+                  </div>
                 </div>
-              )
+
+                {placementInstructions.nextActionDate !==
+                  "No movement needed" && (
+                  <div className="text-sm text-gray-700">
+                    <strong>Next movement:</strong>{" "}
+                    {placementInstructions.nextAction} on{" "}
+                    <span className="font-semibold">
+                      {placementInstructions.nextActionDate}
+                    </span>
+                  </div>
+                )}
+
+                {placementInstructions.urgent && (
+                  <Alert className="border-purple-200 bg-purple-50">
+                    <AlertTriangle className="h-4 w-4 text-purple-600" />
+                    <AlertDescription className="text-purple-700">
+                      <strong>Busy Day Alert!</strong> Extra tasks needed today.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {placementInstructions.additionalNotes && (
+                  <div className="text-xs text-gray-600 italic bg-white/50 p-2 rounded">
+                    💡 <strong>Note:</strong>{" "}
+                    {placementInstructions.additionalNotes}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
