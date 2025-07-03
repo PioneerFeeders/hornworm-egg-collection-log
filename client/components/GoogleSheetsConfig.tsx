@@ -1,11 +1,28 @@
 import React, { useState } from "react";
-import { Settings, Link, Check, AlertCircle } from "lucide-react";
+import {
+  Settings,
+  Link,
+  Check,
+  AlertCircle,
+  Copy,
+  ExternalLink,
+  FileText,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  extractSheetId,
+  getPendingEntries,
+  clearPendingEntries,
+  formatEntryForSheet,
+  getSetupInstructions,
+  generateGoogleAppsScript,
+} from "@/lib/google-sheets";
 
 interface GoogleSheetsConfigProps {
   isConnected: boolean;
@@ -23,6 +40,8 @@ export function GoogleSheetsConfig({
   const [inputUrl, setInputUrl] = useState(sheetUrl || "");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [showScript, setShowScript] = useState(false);
 
   const handleConnect = async () => {
     if (!inputUrl.trim()) {
@@ -126,12 +145,14 @@ export function GoogleSheetsConfig({
           <div className="space-y-4">
             <div className="p-3 bg-green-50 rounded-lg border border-green-200">
               <p className="text-sm text-green-700 font-medium">
-                ✅ Successfully connected to Google Sheets
+                ✅ Connected to Google Sheets
               </p>
               <p className="text-xs text-green-600 mt-1 break-all">
                 {sheetUrl}
               </p>
             </div>
+
+            <ManualSyncSection sheetUrl={sheetUrl} />
 
             <div className="flex gap-2">
               <Button
@@ -146,8 +167,28 @@ export function GoogleSheetsConfig({
                 variant="outline"
                 className="flex-1 border-neon-200 text-neon-700 hover:bg-neon-50"
               >
+                <ExternalLink className="h-4 w-4 mr-2" />
                 Open Sheet
               </Button>
+            </div>
+
+            <div className="space-y-2">
+              <Button
+                onClick={() => setShowInstructions(!showInstructions)}
+                variant="outline"
+                className="w-full text-neon-700 border-neon-200 hover:bg-neon-50"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {showInstructions ? "Hide" : "Show"} Setup Instructions
+              </Button>
+
+              {showInstructions && (
+                <div className="p-3 bg-neon-50 rounded-lg border border-neon-200 text-sm">
+                  <pre className="whitespace-pre-wrap text-neon-800">
+                    {getSetupInstructions(extractSheetId(sheetUrl) || "")}
+                  </pre>
+                </div>
+              )}
             </div>
           </div>
         )}
