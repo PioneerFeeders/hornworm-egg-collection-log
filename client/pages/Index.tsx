@@ -20,12 +20,18 @@ import { formatNumber, formatGrams } from "@/lib/waxworm-utils";
 export default function Index() {
   const {
     isLoading,
+    entries,
     addEntry,
     updateGoal,
+    editEntry,
+    deleteEntry,
     getCurrentWeekStats,
     getTrendData,
     getTotalCollections,
     goalSettings,
+    googleSheetsConfig,
+    connectGoogleSheets,
+    disconnectGoogleSheets,
     exportData,
   } = useEggLogData();
 
@@ -197,12 +203,18 @@ export default function Index() {
             <WeeklyStats stats={currentWeekStats} />
           </div>
 
-          {/* Right Column - Tabs (Goals & Analytics) */}
+          {/* Right Column - Tabs (Goals, Analytics, History & Google Sheets) */}
           <div>
             <TabsSection
               currentGoal={goalSettings.weeklyGoalGrams}
               onSaveGoal={updateGoal}
               trendData={trendData}
+              entries={entries}
+              onEditEntry={editEntry}
+              onDeleteEntry={deleteEntry}
+              googleSheetsConfig={googleSheetsConfig}
+              onConnectGoogleSheets={connectGoogleSheets}
+              onDisconnectGoogleSheets={disconnectGoogleSheets}
             />
           </div>
         </div>
