@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Target, TrendingUp } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { GoalSetting } from "@/components/GoalSetting";
 import { TrendsChart } from "@/components/TrendsChart";
 import { TrendData } from "@shared/api";
+import { cn } from "@/lib/utils";
 
 interface TabsSectionProps {
   currentGoal: number;
@@ -18,36 +19,54 @@ export function TabsSection({
   trendData,
   isLoading = false,
 }: TabsSectionProps) {
+  const [activeTab, setActiveTab] = useState<"goals" | "analytics">("goals");
+
   return (
-    <Tabs defaultValue="goals" className="w-full">
-      <TabsList className="grid w-full grid-cols-2 bg-retro-100 border border-retro-200">
-        <TabsTrigger
-          value="goals"
-          className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-retro-500 data-[state=active]:to-retro-400 data-[state=active]:text-white"
+    <div className="w-full">
+      {/* Custom Tab Navigation */}
+      <div className="grid w-full grid-cols-2 bg-retro-100 border border-retro-200 rounded-lg p-1">
+        <Button
+          variant="ghost"
+          onClick={() => setActiveTab("goals")}
+          className={cn(
+            "flex items-center gap-2 h-10 rounded-md transition-all",
+            activeTab === "goals"
+              ? "bg-gradient-to-r from-retro-500 to-retro-400 text-white shadow-md hover:from-retro-600 hover:to-retro-500"
+              : "text-retro-700 hover:bg-retro-200 hover:text-retro-800",
+          )}
         >
           <Target className="h-4 w-4" />
           Goals
-        </TabsTrigger>
-        <TabsTrigger
-          value="analytics"
-          className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-neon-500 data-[state=active]:to-neon-400 data-[state=active]:text-white"
+        </Button>
+        <Button
+          variant="ghost"
+          onClick={() => setActiveTab("analytics")}
+          className={cn(
+            "flex items-center gap-2 h-10 rounded-md transition-all",
+            activeTab === "analytics"
+              ? "bg-gradient-to-r from-neon-500 to-neon-400 text-white shadow-md hover:from-neon-600 hover:to-neon-500"
+              : "text-retro-700 hover:bg-retro-200 hover:text-retro-800",
+          )}
         >
           <TrendingUp className="h-4 w-4" />
           Analytics
-        </TabsTrigger>
-      </TabsList>
+        </Button>
+      </div>
 
-      <TabsContent value="goals" className="mt-6">
-        <GoalSetting
-          currentGoal={currentGoal}
-          onSave={onSaveGoal}
-          isLoading={isLoading}
-        />
-      </TabsContent>
+      {/* Tab Content */}
+      <div className="mt-6">
+        {activeTab === "goals" && (
+          <GoalSetting
+            currentGoal={currentGoal}
+            onSave={onSaveGoal}
+            isLoading={isLoading}
+          />
+        )}
 
-      <TabsContent value="analytics" className="mt-6">
-        <TrendsChart data={trendData} isLoading={isLoading} />
-      </TabsContent>
-    </Tabs>
+        {activeTab === "analytics" && (
+          <TrendsChart data={trendData} isLoading={isLoading} />
+        )}
+      </div>
+    </div>
   );
 }
