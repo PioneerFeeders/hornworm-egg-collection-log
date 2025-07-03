@@ -138,9 +138,11 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                       >
                         {placementInstructions.container}
                       </div>
-                      <div className="text-xs text-gray-600">
-                        {placementInstructions.temperature}
-                      </div>
+                      {placementInstructions.temperature && (
+                        <div className="text-xs text-gray-600">
+                          {placementInstructions.temperature}
+                        </div>
+                      )}
                     </div>
                   </div>
 

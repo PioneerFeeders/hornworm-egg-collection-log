@@ -65,14 +65,14 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
       return {
         container: "Refrigerator",
         icon: "❄️",
-        temperature: "4°C",
-        duration: "Store until needed",
-        nextAction: "Move to incubator when ready",
-        nextActionDate: "Flexible timing",
+        temperature: "",
+        duration: "Store temporarily",
+        nextAction: "Move to incubator",
+        nextActionDate: "Wednesday afternoon",
         color: "text-blue-700",
         bgColor: "bg-yellow-50 border-yellow-200",
         additionalNotes:
-          "Off-schedule harvest - store in refrigerator for flexible timing",
+          "Off-schedule harvest - move to incubator Wednesday afternoon",
       };
 
     case 5: // Friday
@@ -92,14 +92,14 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
       return {
         container: "Refrigerator",
         icon: "❄️",
-        temperature: "4°C",
-        duration: "Store until needed",
-        nextAction: "Move to incubator when ready",
-        nextActionDate: "Flexible timing",
+        temperature: "",
+        duration: "Store temporarily",
+        nextAction: "Move to incubator",
+        nextActionDate: "Wednesday afternoon",
         color: "text-blue-700",
         bgColor: "bg-yellow-50 border-yellow-200",
         additionalNotes:
-          "Off-schedule harvest - store in refrigerator for flexible timing",
+          "Off-schedule harvest - move to incubator Wednesday afternoon",
       };
 
     case 0: // Sunday
