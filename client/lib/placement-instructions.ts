@@ -63,15 +63,16 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
 
     case 4: // Thursday
       return {
-        container: "NO HARVEST",
-        icon: "🚫",
-        temperature: "N/A",
-        duration: "Rest day",
-        nextAction: "No harvest today",
-        nextActionDate: "Try another day",
-        color: "text-gray-700",
-        bgColor: "bg-gray-50 border-gray-200",
-        additionalNotes: "Thursday is a rest day - no egg collection",
+        container: "Refrigerator",
+        icon: "❄️",
+        temperature: "4°C",
+        duration: "Store until needed",
+        nextAction: "Move to incubator when ready",
+        nextActionDate: "Flexible timing",
+        color: "text-blue-700",
+        bgColor: "bg-yellow-50 border-yellow-200",
+        additionalNotes:
+          "Off-schedule harvest - store in refrigerator for flexible timing",
       };
 
     case 5: // Friday
@@ -89,15 +90,16 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
 
     case 6: // Saturday
       return {
-        container: "NO HARVEST",
-        icon: "🚫",
-        temperature: "N/A",
-        duration: "Rest day",
-        nextAction: "No harvest today",
-        nextActionDate: "Try another day",
-        color: "text-gray-700",
-        bgColor: "bg-gray-50 border-gray-200",
-        additionalNotes: "Saturday is a rest day - no egg collection",
+        container: "Refrigerator",
+        icon: "❄️",
+        temperature: "4°C",
+        duration: "Store until needed",
+        nextAction: "Move to incubator when ready",
+        nextActionDate: "Flexible timing",
+        color: "text-blue-700",
+        bgColor: "bg-yellow-50 border-yellow-200",
+        additionalNotes:
+          "Off-schedule harvest - store in refrigerator for flexible timing",
       };
 
     case 0: // Sunday
@@ -118,12 +120,20 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
 }
 
 /**
- * Check if a date allows harvest
+ * Check if a date allows harvest (now always returns true)
  */
 export function canHarvestOnDate(date: Date): boolean {
+  // Allow harvest on any day
+  return true;
+}
+
+/**
+ * Check if a date is off-schedule (Thursday or Saturday)
+ */
+export function isOffScheduleHarvest(date: Date): boolean {
   const dayOfWeek = date.getDay();
-  // Can't harvest on Thursday (4) or Saturday (6)
-  return dayOfWeek !== 4 && dayOfWeek !== 6;
+  // Thursday (4) or Saturday (6) are off-schedule
+  return dayOfWeek === 4 || dayOfWeek === 6;
 }
 
 /**

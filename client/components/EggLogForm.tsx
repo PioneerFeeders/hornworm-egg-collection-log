@@ -15,11 +15,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { gramsToEggs } from "@/lib/waxworm-utils";
-import {
-  getPlacementInstructions,
-  canHarvestOnDate,
-  getDayName,
-} from "@/lib/placement-instructions";
+import { getPlacementInstructions, canHarvestOnDate, getDayName, isOffScheduleHarvest } from "@/lib/placement-instructions";
 import { EggLogEntry } from "@shared/api";
 
 interface EggLogFormProps {
@@ -35,13 +31,11 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
   const placementInstructions = getPlacementInstructions(date);
   const canHarvest = canHarvestOnDate(date);
+  const isOffSchedule = isOffScheduleHarvest(date);
   const dayName = getDayName(date);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Prevent submission on no-harvest days
-    if (!canHarvest) return;
 
     const grams = parseFloat(gramsLogged);
     if (isNaN(grams) || grams <= 0) return;
@@ -109,9 +103,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
           {/* Placement Instructions */}
           <div className="space-y-3">
-            <div
-              className={`p-4 rounded-lg border-2 ${placementInstructions.bgColor}`}
-            >
+            <div className={`p-4 rounded-lg border-2 ${placementInstructions.bgColor}`}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-lg">{placementInstructions.icon}</span>
                 <h3 className={`font-bold ${placementInstructions.color}`}>
@@ -119,23 +111,22 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                 </h3>
               </div>
 
-              {!canHarvest ? (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <AlertDescription className="text-red-700">
-                    <strong>No harvest allowed on {dayName}!</strong> This is a
-                    rest day.
+              {isOffSchedule && (
+                <Alert className="border-yellow-200 bg-yellow-50">
+                  <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                  <AlertDescription className="text-yellow-700">
+                    <strong>Off-schedule harvest on {dayName}!</strong> Defaulting to refrigerator storage for flexible timing.
                   </AlertDescription>
                 </Alert>
-              ) : (
+              )}
+
+              {(
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center gap-2">
                       <Package className="h-4 w-4" />
                       <div>
-                        <div
-                          className={`text-sm font-semibold ${placementInstructions.color}`}
-                        >
+                        <div className={`text-sm font-semibold ${placementInstructions.color}`}>
                           {placementInstructions.container}
                         </div>
                         <div className="text-xs text-gray-600">
@@ -147,9 +138,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4" />
                       <div>
-                        <div
-                          className={`text-sm font-semibold ${placementInstructions.color}`}
-                        >
+                        <div className={`text-sm font-semibold ${placementInstructions.color}`}>
                           {placementInstructions.duration}
                         </div>
                         <div className="text-xs text-gray-600">
@@ -159,14 +148,10 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                     </div>
                   </div>
 
-                  {placementInstructions.nextActionDate !==
-                    "No movement needed" && (
+                  {placementInstructions.nextActionDate !== "No movement needed" && (
                     <div className="text-sm text-gray-700">
-                      <strong>Next movement:</strong>{" "}
-                      {placementInstructions.nextAction} on{" "}
-                      <span className="font-semibold">
-                        {placementInstructions.nextActionDate}
-                      </span>
+                      <strong>Next movement:</strong> {placementInstructions.nextAction} on{" "}
+                      <span className="font-semibold">{placementInstructions.nextActionDate}</span>
                     </div>
                   )}
 
@@ -174,20 +159,18 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                     <Alert className="border-purple-200 bg-purple-50">
                       <AlertTriangle className="h-4 w-4 text-purple-600" />
                       <AlertDescription className="text-purple-700">
-                        <strong>Busy Day Alert!</strong> Extra tasks needed
-                        today.
+                        <strong>Busy Day Alert!</strong> Extra tasks needed today.
                       </AlertDescription>
                     </Alert>
                   )}
 
                   {placementInstructions.additionalNotes && (
                     <div className="text-xs text-gray-600 italic bg-white/50 p-2 rounded">
-                      💡 <strong>Note:</strong>{" "}
-                      {placementInstructions.additionalNotes}
+                      💡 <strong>Note:</strong> {placementInstructions.additionalNotes}
                     </div>
                   )}
                 </div>
-              )}
+              )
             </div>
           </div>
 
@@ -229,13 +212,13 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
           <Button
             type="submit"
-            disabled={!gramsLogged || isLoading || !canHarvest}
+            disabled={!gramsLogged || isLoading}
             className="w-full bg-gradient-to-r from-retro-600 to-retro-500 hover:from-retro-700 hover:to-retro-600 text-white shadow-lg disabled:opacity-50"
           >
-            {!canHarvest
-              ? `No Harvest on ${dayName}`
-              : isLoading
-                ? "Logging..."
+            {isLoading
+              ? "Logging..."
+              : isOffSchedule
+                ? `Log Off-Schedule Harvest (${dayName})`
                 : "Log Collection"}
           </Button>
         </form>
