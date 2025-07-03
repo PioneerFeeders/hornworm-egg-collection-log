@@ -16,9 +16,9 @@ interface WeeklyStatsProps {
 export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
   if (isLoading) {
     return (
-      <Card className="border-emerald-200">
+      <Card className="border-retro-200">
         <CardHeader>
-          <CardTitle className="text-emerald-800 flex items-center gap-2">
+          <CardTitle className="text-retro-800 flex items-center gap-2">
             <Calendar className="h-5 w-5" />
             This Week
           </CardTitle>
@@ -39,12 +39,15 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
   const weekEndDate = format(parseISO(stats.weekEnd), "MMM d, yyyy");
 
   return (
-    <Card className="border-emerald-200 shadow-md">
+    <Card className="border-retro-200 shadow-lg bg-gradient-to-br from-white to-retro-50">
       <CardHeader className="pb-4">
-        <CardTitle className="text-emerald-800 flex items-center gap-2">
+        <CardTitle className="text-retro-800 flex items-center gap-2">
           <Calendar className="h-5 w-5" />
           This Week
-          <Badge variant="outline" className="text-xs ml-auto">
+          <Badge
+            variant="outline"
+            className="text-xs ml-auto border-retro-300 text-retro-700"
+          >
             {weekStartDate} - {weekEndDate}
           </Badge>
         </CardTitle>
@@ -53,10 +56,10 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
         {/* Progress Overview */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-emerald-700">
+            <span className="text-sm font-medium text-retro-700">
               Goal Progress
             </span>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-retro-600">
               {stats.progressPercentage}%
             </span>
           </div>
@@ -66,14 +69,14 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
           />
           <div className="flex items-center gap-2">
             {stats.isAhead ? (
-              <TrendingUp className="h-4 w-4 text-emerald-600" />
+              <TrendingUp className="h-4 w-4 text-neon-600" />
             ) : (
               <TrendingDown className="h-4 w-4 text-orange-500" />
             )}
             <span
               className={cn(
                 "text-sm font-medium",
-                stats.isAhead ? "text-emerald-600" : "text-orange-500",
+                stats.isAhead ? "text-neon-600" : "text-orange-500",
               )}
             >
               {stats.isAhead ? "Ahead" : "Behind"} by{" "}
@@ -85,24 +88,24 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <p className="text-sm text-gray-600">Collected</p>
-            <p className="text-2xl font-bold text-emerald-800">
+            <p className="text-sm text-retro-600">Collected</p>
+            <p className="text-2xl font-bold text-retro-800">
               {formatGrams(stats.totalGrams)}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-retro-500">
               {formatNumber(stats.totalEggs)} eggs
             </p>
           </div>
 
           <div className="space-y-1">
-            <p className="text-sm text-gray-600 flex items-center gap-1">
+            <p className="text-sm text-retro-600 flex items-center gap-1">
               <Target className="h-3 w-3" />
               Goal
             </p>
-            <p className="text-2xl font-bold text-emerald-600">
+            <p className="text-2xl font-bold text-neon-600">
               {formatGrams(stats.goalGrams)}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-retro-500">
               {formatNumber(stats.goalEggs)} eggs
             </p>
           </div>
@@ -111,7 +114,7 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
         {/* Daily Breakdown */}
         {stats.dailyEntries.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-emerald-700">
+            <h4 className="text-sm font-medium text-retro-700">
               Recent Collections
             </h4>
             <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -126,10 +129,10 @@ export function WeeklyStats({ stats, isLoading = false }: WeeklyStatsProps) {
                     key={entry.id}
                     className="flex items-center justify-between text-sm py-1"
                   >
-                    <span className="text-gray-600">
+                    <span className="text-retro-600">
                       {format(parseISO(entry.date), "MMM d")}
                     </span>
-                    <span className="font-medium text-emerald-700">
+                    <span className="font-medium text-retro-700">
                       {formatGrams(entry.gramsLogged)}
                     </span>
                   </div>
