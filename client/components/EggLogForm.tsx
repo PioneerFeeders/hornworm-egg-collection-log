@@ -51,9 +51,9 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const eggCount = gramsToEggs(gramsValue);
 
   return (
-    <Card className="border-emerald-200 shadow-md">
+    <Card className="border-retro-200 shadow-lg bg-gradient-to-br from-white to-retro-50">
       <CardHeader className="pb-4">
-        <CardTitle className="text-emerald-800 flex items-center gap-2">
+        <CardTitle className="text-retro-800 flex items-center gap-2">
           <Plus className="h-5 w-5" />
           Log Egg Collection
         </CardTitle>
@@ -61,7 +61,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="date" className="text-emerald-700">
+            <Label htmlFor="date" className="text-retro-700">
               Collection Date
             </Label>
             <Popover open={showCalendar} onOpenChange={setShowCalendar}>
@@ -95,7 +95,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="grams" className="text-emerald-700">
+            <Label htmlFor="grams" className="text-retro-700">
               Weight (grams)
             </Label>
             <Input
@@ -106,18 +106,18 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
               value={gramsLogged}
               onChange={(e) => setGramsLogged(e.target.value)}
               placeholder="Enter weight in grams"
-              className="border-emerald-200 focus:border-emerald-400"
+              className="border-retro-200 focus:border-retro-400 focus:ring-retro-400"
               required
             />
             {gramsValue > 0 && (
-              <p className="text-sm text-emerald-600">
+              <p className="text-sm text-retro-600 font-medium">
                 ≈ {eggCount.toLocaleString()} eggs
               </p>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes" className="text-emerald-700">
+            <Label htmlFor="notes" className="text-retro-700">
               Notes (optional)
             </Label>
             <Textarea
@@ -125,7 +125,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes about this collection..."
-              className="border-emerald-200 focus:border-emerald-400 resize-none"
+              className="border-retro-200 focus:border-retro-400 focus:ring-retro-400 resize-none"
               rows={3}
             />
           </div>
@@ -133,7 +133,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
           <Button
             type="submit"
             disabled={!gramsLogged || isLoading}
-            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+            className="w-full bg-gradient-to-r from-retro-600 to-retro-500 hover:from-retro-700 hover:to-retro-600 text-white shadow-lg"
           >
             {isLoading ? "Logging..." : "Log Collection"}
           </Button>
