@@ -289,8 +289,3 @@ function ManualSyncSection({ sheetUrl }: { sheetUrl?: string }) {
     </div>
   );
 }
-
-// Standalone component for use outside the config
-function ManualSyncSectionComponent() {
-  return null; // This was just for the structure, we'll use ManualSyncSection directly
-}
