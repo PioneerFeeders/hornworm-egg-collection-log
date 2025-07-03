@@ -80,123 +80,120 @@ export function GoogleSheetsConfig({
   };
 
   return (
-    <>
-      <ManualSyncSectionComponent />
-      <Card className="border-neon-200 shadow-lg bg-gradient-to-br from-white to-neon-50">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-neon-800 flex items-center gap-2">
-            <Settings className="h-5 w-5" />
-            Google Sheets Integration
-            {isConnected && (
-              <Badge
-                variant="outline"
-                className="ml-auto bg-green-50 text-green-700 border-green-300"
-              >
-                <Check className="h-3 w-3 mr-1" />
-                Connected
-              </Badge>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {!isConnected ? (
-            <>
-              <div className="space-y-2">
-                <Label htmlFor="sheet-url" className="text-neon-700">
-                  Google Sheets URL
-                </Label>
-                <Input
-                  id="sheet-url"
-                  value={inputUrl}
-                  onChange={(e) => setInputUrl(e.target.value)}
-                  placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/edit"
-                  className="border-neon-200 focus:border-neon-400 focus:ring-neon-400"
-                />
-                <p className="text-xs text-neon-600">
-                  Copy the URL from your Google Sheets browser address bar
-                </p>
-              </div>
+    <Card className="border-neon-200 shadow-lg bg-gradient-to-br from-white to-neon-50">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-neon-800 flex items-center gap-2">
+          <Settings className="h-5 w-5" />
+          Google Sheets Integration
+          {isConnected && (
+            <Badge
+              variant="outline"
+              className="ml-auto bg-green-50 text-green-700 border-green-300"
+            >
+              <Check className="h-3 w-3 mr-1" />
+              Connected
+            </Badge>
+          )}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!isConnected ? (
+          <>
+            <div className="space-y-2">
+              <Label htmlFor="sheet-url" className="text-neon-700">
+                Google Sheets URL
+              </Label>
+              <Input
+                id="sheet-url"
+                value={inputUrl}
+                onChange={(e) => setInputUrl(e.target.value)}
+                placeholder="https://docs.google.com/spreadsheets/d/your-sheet-id/edit"
+                className="border-neon-200 focus:border-neon-400 focus:ring-neon-400"
+              />
+              <p className="text-xs text-neon-600">
+                Copy the URL from your Google Sheets browser address bar
+              </p>
+            </div>
 
-              {error && (
-                <Alert className="border-red-200 bg-red-50">
-                  <AlertCircle className="h-4 w-4 text-red-600" />
-                  <AlertDescription className="text-red-700">
-                    {error}
-                  </AlertDescription>
-                </Alert>
-              )}
-
-              <Alert className="border-neon-200 bg-neon-50">
-                <AlertCircle className="h-4 w-4 text-neon-600" />
-                <AlertDescription className="text-neon-700">
-                  Make sure your Google Sheet is set to "Anyone with the link
-                  can edit" for automatic syncing to work.
+            {error && (
+              <Alert className="border-red-200 bg-red-50">
+                <AlertCircle className="h-4 w-4 text-red-600" />
+                <AlertDescription className="text-red-700">
+                  {error}
                 </AlertDescription>
               </Alert>
+            )}
 
-              <Button
-                onClick={handleConnect}
-                disabled={isConnecting || !inputUrl.trim()}
-                className="w-full bg-gradient-to-r from-neon-600 to-neon-500 hover:from-neon-700 hover:to-neon-600 text-white shadow-lg"
-              >
-                <Link className="h-4 w-4 mr-2" />
-                {isConnecting ? "Connecting..." : "Connect to Google Sheets"}
-              </Button>
-            </>
-          ) : (
-            <div className="space-y-4">
-              <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                <p className="text-sm text-green-700 font-medium">
-                  ✅ Connected to Google Sheets
-                </p>
-                <p className="text-xs text-green-600 mt-1 break-all">
-                  {sheetUrl}
-                </p>
-              </div>
+            <Alert className="border-neon-200 bg-neon-50">
+              <AlertCircle className="h-4 w-4 text-neon-600" />
+              <AlertDescription className="text-neon-700">
+                Make sure your Google Sheet is set to "Anyone with the link can
+                edit" for automatic syncing to work.
+              </AlertDescription>
+            </Alert>
 
-              <ManualSyncSection sheetUrl={sheetUrl} />
-
-              <div className="flex gap-2">
-                <Button
-                  onClick={handleDisconnect}
-                  variant="outline"
-                  className="flex-1 border-red-200 text-red-700 hover:bg-red-50"
-                >
-                  Disconnect
-                </Button>
-                <Button
-                  onClick={() => window.open(sheetUrl, "_blank")}
-                  variant="outline"
-                  className="flex-1 border-neon-200 text-neon-700 hover:bg-neon-50"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open Sheet
-                </Button>
-              </div>
-
-              <div className="space-y-2">
-                <Button
-                  onClick={() => setShowInstructions(!showInstructions)}
-                  variant="outline"
-                  className="w-full text-neon-700 border-neon-200 hover:bg-neon-50"
-                >
-                  <FileText className="h-4 w-4 mr-2" />
-                  {showInstructions ? "Hide" : "Show"} Setup Instructions
-                </Button>
-
-                {showInstructions && (
-                  <div className="p-3 bg-neon-50 rounded-lg border border-neon-200 text-sm">
-                    <pre className="whitespace-pre-wrap text-neon-800">
-                      {getSetupInstructions(extractSheetId(sheetUrl) || "")}
-                    </pre>
-                  </div>
-                )}
-              </div>
+            <Button
+              onClick={handleConnect}
+              disabled={isConnecting || !inputUrl.trim()}
+              className="w-full bg-gradient-to-r from-neon-600 to-neon-500 hover:from-neon-700 hover:to-neon-600 text-white shadow-lg"
+            >
+              <Link className="h-4 w-4 mr-2" />
+              {isConnecting ? "Connecting..." : "Connect to Google Sheets"}
+            </Button>
+          </>
+        ) : (
+          <div className="space-y-4">
+            <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+              <p className="text-sm text-green-700 font-medium">
+                ✅ Connected to Google Sheets
+              </p>
+              <p className="text-xs text-green-600 mt-1 break-all">
+                {sheetUrl}
+              </p>
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </>
+
+            <ManualSyncSection sheetUrl={sheetUrl} />
+
+            <div className="flex gap-2">
+              <Button
+                onClick={handleDisconnect}
+                variant="outline"
+                className="flex-1 border-red-200 text-red-700 hover:bg-red-50"
+              >
+                Disconnect
+              </Button>
+              <Button
+                onClick={() => window.open(sheetUrl, "_blank")}
+                variant="outline"
+                className="flex-1 border-neon-200 text-neon-700 hover:bg-neon-50"
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open Sheet
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              <Button
+                onClick={() => setShowInstructions(!showInstructions)}
+                variant="outline"
+                className="w-full text-neon-700 border-neon-200 hover:bg-neon-50"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {showInstructions ? "Hide" : "Show"} Setup Instructions
+              </Button>
+
+              {showInstructions && (
+                <div className="p-3 bg-neon-50 rounded-lg border border-neon-200 text-sm">
+                  <pre className="whitespace-pre-wrap text-neon-800">
+                    {getSetupInstructions(extractSheetId(sheetUrl) || "")}
+                  </pre>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
