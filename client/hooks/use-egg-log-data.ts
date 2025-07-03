@@ -114,20 +114,27 @@ export function useEggLogData() {
       }
 
       try {
-        const response = await fetch("/api/sync-google-sheets", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            sheetUrl: googleSheetsConfig.sheetUrl,
-            entry,
-            action,
-          }),
-        });
+        // Use client-side Google Sheets integration
+        const { syncToGoogleSheets: clientSync } = await import(
+          "@/lib/google-sheets"
+        );
 
-        if (!response.ok) {
-          console.error("Failed to sync to Google Sheets");
+        const success = await clientSync(
+          {
+            sheetUrl: googleSheetsConfig.sheetUrl,
+            sheetId:
+              googleSheetsConfig.sheetUrl.match(
+                /\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/,
+              )?.[1] || "",
+          },
+          entry,
+          action,
+        );
+
+        if (!success) {
+          console.error("Failed to prepare entry for Google Sheets sync");
+        } else {
+          console.log(`Entry prepared for Google Sheets: ${action}`);
         }
       } catch (error) {
         console.error("Error syncing to Google Sheets:", error);
