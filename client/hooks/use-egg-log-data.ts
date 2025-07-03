@@ -27,11 +27,41 @@ export function useEggLogData() {
       const savedGoals = localStorage.getItem(GOAL_STORAGE_KEY);
 
       if (savedEntries) {
-        setEntries(JSON.parse(savedEntries));
+        const parsedEntries = JSON.parse(savedEntries);
+        setEntries(parsedEntries);
+      } else {
+        // Add some sample data for first-time users
+        const sampleEntries: EggLogEntry[] = [
+          {
+            id: generateId(),
+            date: new Date().toISOString(),
+            gramsLogged: 2.5,
+            eggCount: 1625,
+            notes: "Morning collection",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: generateId(),
+            date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+            gramsLogged: 3.2,
+            eggCount: 2080,
+            notes: "Good yield today",
+            createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          },
+        ];
+        setEntries(sampleEntries);
       }
 
       if (savedGoals) {
         setGoalSettings(JSON.parse(savedGoals));
+      } else {
+        // Set a default weekly goal
+        const defaultGoal: GoalSettings = {
+          weeklyGoalGrams: 15,
+          weeklyGoalEggs: 9750,
+          isActive: true,
+        };
+        setGoalSettings(defaultGoal);
       }
     } catch (error) {
       console.error("Error loading saved data:", error);
