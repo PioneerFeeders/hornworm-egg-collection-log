@@ -39,7 +39,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const isOffSchedule = isOffScheduleHarvest(date);
   const dayName = getDayName(date);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const grams = parseFloat(gramsLogged);
@@ -52,7 +52,22 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
       notes: notes.trim() || undefined,
     };
 
+    // Submit to local storage (existing functionality)
     onSubmit(entry);
+
+    // Also submit to Netlify forms if deployed
+    try {
+      const formData = new FormData(e.target as HTMLFormElement);
+
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+    } catch (error) {
+      // Silently fail for local development
+      console.log("Netlify form submission not available in development");
+    }
 
     // Reset form
     setGramsLogged("");
