@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { EggLogForm } from "@/components/EggLogForm";
 import { WeeklyStats } from "@/components/WeeklyStats";
 import { TabsSection } from "@/components/TabsSection";
+import { NetlifyForms } from "@/components/NetlifyForms";
 import { useEggLogData } from "@/hooks/use-egg-log-data";
 import { formatNumber, formatGrams } from "@/lib/waxworm-utils";
 
