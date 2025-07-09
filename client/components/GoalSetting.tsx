@@ -52,6 +52,7 @@ export function GoalSetting({
           </Label>
           <Input
             id="goal"
+            name="goal"
             type="number"
             step="0.01"
             min="0"
