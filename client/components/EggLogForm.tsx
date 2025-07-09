@@ -210,10 +210,10 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
           <Button
             type="submit"
-            disabled={!gramsLogged || isLoading}
+            disabled={!gramsLogged || isLoading || isSubmitting}
             className="w-full bg-gradient-to-r from-retro-600 to-retro-500 hover:from-retro-700 hover:to-retro-600 text-white shadow-lg disabled:opacity-50"
           >
-            {isLoading
+            {isLoading || isSubmitting
               ? "Logging..."
               : isOffSchedule
                 ? `Log Off-Schedule Harvest (${dayName})`
