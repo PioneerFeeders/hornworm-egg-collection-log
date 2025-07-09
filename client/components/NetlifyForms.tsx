@@ -22,6 +22,14 @@ export function NetlifyForms() {
         <input type="number" name="goal" />
       </form>
 
+      {/* Edit Entry Form */}
+      <form name="edit-entry" data-netlify="true">
+        <input type="hidden" name="form-name" value="edit-entry" />
+        <input type="text" name="collection-date" />
+        <input type="number" name="grams" />
+        <textarea name="notes"></textarea>
+      </form>
+
       {/* Contact/Feedback Form (optional for future use) */}
       <form name="contact" data-netlify="true">
         <input type="hidden" name="form-name" value="contact" />
