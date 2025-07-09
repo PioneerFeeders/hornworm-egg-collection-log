@@ -33,6 +33,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const [gramsLogged, setGramsLogged] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const placementInstructions = getPlacementInstructions(date);
   const canHarvest = canHarvestOnDate(date);
