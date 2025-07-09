@@ -43,6 +43,9 @@ export function GoalSetting({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        <form name="weekly-goal" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="weekly-goal" />
+        </form>
         <div className="space-y-2">
           <Label htmlFor="goal" className="text-retro-700">
             Target (grams per week)
