@@ -75,8 +75,31 @@ export function useEggLogData() {
         createdAt: new Date().toISOString(),
       };
 
-      setEntries((prev) => [...prev, newEntry]);
-      console.log("✅ Entry added successfully:", newEntry);
+      setEntries((prev) => {
+        // Check for potential duplicates (same date and grams within 1 second)
+        const recentDuplicate = prev.find(
+          (entry) =>
+            Math.abs(
+              new Date(entry.createdAt).getTime() -
+                new Date(newEntry.createdAt).getTime(),
+            ) < 1000 &&
+            entry.gramsLogged === newEntry.gramsLogged &&
+            entry.date.split("T")[0] === newEntry.date.split("T")[0],
+        );
+
+        if (recentDuplicate) {
+          console.warn(
+            "⚠️ Potential duplicate entry detected, skipping:",
+            newEntry,
+          );
+          return prev;
+        }
+
+        const updated = [...prev, newEntry];
+        console.log("✅ Entry added successfully:", newEntry);
+        console.log("📊 Total entries now:", updated.length);
+        return updated;
+      });
 
       return newEntry;
     },
