@@ -193,6 +193,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
             </Label>
             <Input
               id="grams"
+              name="grams"
               type="number"
               step="0.01"
               min="0"
