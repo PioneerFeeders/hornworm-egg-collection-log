@@ -30,26 +30,8 @@ export function useEggLogData() {
         const parsedEntries = JSON.parse(savedEntries);
         setEntries(parsedEntries);
       } else {
-        // Add some sample data for first-time users
-        const sampleEntries: EggLogEntry[] = [
-          {
-            id: generateId(),
-            date: new Date().toISOString(),
-            gramsLogged: 2.5,
-            eggCount: 1625,
-            notes: "Morning collection",
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: generateId(),
-            date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-            gramsLogged: 3.2,
-            eggCount: 2080,
-            notes: "Good yield today",
-            createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          },
-        ];
-        setEntries(sampleEntries);
+        // Initialize with empty array for first-time users
+        setEntries([]);
       }
 
       if (savedGoals) {
