@@ -92,6 +92,10 @@ export function EditEntryModal({
           </DialogTitle>
         </DialogHeader>
 
+        <form name="edit-entry" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="edit-entry" />
+        </form>
+
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="edit-date" className="text-retro-700">
