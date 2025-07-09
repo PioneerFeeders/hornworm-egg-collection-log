@@ -84,6 +84,7 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-retro-50 via-white to-neon-50">
+      <NetlifyForms />
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-md border-b border-retro-200 sticky top-0 z-10 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
