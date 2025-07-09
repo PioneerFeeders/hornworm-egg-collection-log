@@ -174,7 +174,15 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
                   <Alert className="border-purple-200 bg-purple-50">
                     <AlertTriangle className="h-4 w-4 text-purple-600" />
                     <AlertDescription className="text-purple-700">
-                      <strong>Busy Day Alert!</strong> Extra tasks needed today.
+                      <strong>Wednesday Busy Day Alert!</strong>
+                      <div className="mt-2 space-y-1 text-sm">
+                        <div>
+                          📋 <strong>3 Tasks Today:</strong>
+                        </div>
+                        <div>1. Place fresh Wednesday harvest → Incubator</div>
+                        <div>2. Move Monday eggs → Fridge to Incubator</div>
+                        <div>3. Move Sunday eggs → Fridge to Incubator</div>
+                      </div>
                     </AlertDescription>
                   </Alert>
                 )}
