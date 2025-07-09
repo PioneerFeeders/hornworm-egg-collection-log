@@ -216,6 +216,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
             </Label>
             <Textarea
               id="notes"
+              name="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Add any notes about this collection..."
