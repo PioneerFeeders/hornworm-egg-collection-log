@@ -9,7 +9,6 @@ export interface PlacementInstruction {
   nextActionDate: string;
   color: string;
   bgColor: string;
-  urgent?: boolean;
   additionalNotes?: string;
 }
 
@@ -55,10 +54,8 @@ export function getPlacementInstructions(date: Date): PlacementInstruction {
         nextAction: "Stay in incubator",
         nextActionDate: "No movement needed",
         color: "text-orange-700",
-        bgColor: "bg-purple-50 border-purple-200",
-        urgent: true,
-        additionalNotes:
-          "BUSY DAY: Also move Monday & Sunday eggs from fridge to incubator today!",
+        bgColor: "bg-orange-50 border-orange-200",
+        additionalNotes: "Direct to incubator - no refrigeration needed",
       };
 
     case 4: // Thursday
