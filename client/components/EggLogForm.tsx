@@ -79,6 +79,11 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
           className="space-y-4"
         >
           <input type="hidden" name="form-name" value="egg-collection" />
+          <input
+            type="hidden"
+            name="collection-date"
+            value={format(date, "yyyy-MM-dd")}
+          />
           <div className="space-y-2">
             <Label htmlFor="date" className="text-retro-700">
               Collection Date
