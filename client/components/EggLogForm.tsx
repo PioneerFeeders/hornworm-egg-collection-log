@@ -71,7 +71,14 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+          name="egg-collection"
+          method="POST"
+          data-netlify="true"
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+          <input type="hidden" name="form-name" value="egg-collection" />
           <div className="space-y-2">
             <Label htmlFor="date" className="text-retro-700">
               Collection Date
