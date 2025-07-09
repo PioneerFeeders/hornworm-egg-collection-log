@@ -40,24 +40,36 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const isOffSchedule = isOffScheduleHarvest(date);
   const dayName = getDayName(date);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Prevent double submissions
+    if (isSubmitting || isLoading) return;
 
     const grams = parseFloat(gramsLogged);
     if (isNaN(grams) || grams <= 0) return;
 
-    const entry = {
-      date: date.toISOString(),
-      gramsLogged: grams,
-      eggCount: gramsToEggs(grams),
-      notes: notes.trim() || undefined,
-    };
+    setIsSubmitting(true);
 
-    onSubmit(entry);
+    try {
+      const entry = {
+        date: date.toISOString(),
+        gramsLogged: grams,
+        eggCount: gramsToEggs(grams),
+        notes: notes.trim() || undefined,
+      };
 
-    // Reset form
-    setGramsLogged("");
-    setNotes("");
+      await onSubmit(entry);
+
+      // Reset form only on successful submission
+      setGramsLogged("");
+      setNotes("");
+      console.log("✅ Form submitted successfully");
+    } catch (error) {
+      console.error("❌ Form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const gramsValue = parseFloat(gramsLogged) || 0;
