@@ -33,6 +33,7 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const [gramsLogged, setGramsLogged] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
   const [showCalendar, setShowCalendar] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const placementInstructions = getPlacementInstructions(date);
   const canHarvest = canHarvestOnDate(date);
@@ -42,16 +43,15 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Prevent double submissions
+    if (isSubmitting || isLoading) return;
+
     const grams = parseFloat(gramsLogged);
     if (isNaN(grams) || grams <= 0) return;
 
-    const entry = {
-      date: date.toISOString(),
-      gramsLogged: grams,
-      eggCount: gramsToEggs(grams),
-      notes: notes.trim() || undefined,
-    };
+    setIsSubmitting(true);
 
+<<<<<<< HEAD
     // Submit to local storage (existing functionality)
     onSubmit(entry);
 
@@ -72,6 +72,27 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
     // Reset form
     setGramsLogged("");
     setNotes("");
+=======
+    try {
+      const entry = {
+        date: date.toISOString(),
+        gramsLogged: grams,
+        eggCount: gramsToEggs(grams),
+        notes: notes.trim() || undefined,
+      };
+
+      await onSubmit(entry);
+
+      // Reset form only on successful submission
+      setGramsLogged("");
+      setNotes("");
+      console.log("✅ Form submitted successfully");
+    } catch (error) {
+      console.error("❌ Form submission error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+>>>>>>> 60ee1e835dcd44c236a6044d88e575476101cdfa
   };
 
   const gramsValue = parseFloat(gramsLogged) || 0;
@@ -156,43 +177,13 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
               )}
 
               <div className="space-y-3">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex items-center gap-2">
-                    <Package className="h-4 w-4" />
-                    <div>
-                      <div
-                        className={`text-sm font-semibold ${placementInstructions.color}`}
-                      >
-                        {placementInstructions.container}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        {placementInstructions.temperature}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    <div>
-                      <div
-                        className={`text-sm font-semibold ${placementInstructions.color}`}
-                      >
-                        {placementInstructions.duration}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        {placementInstructions.nextAction}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {placementInstructions.nextActionDate !==
                   "No movement needed" && (
                   <div className="text-sm text-gray-700">
-                    <strong>Next movement:</strong>{" "}
-                    {placementInstructions.nextAction} on{" "}
+                    <strong>Next movement:</strong>
+                    &nbsp;{placementInstructions.nextAction} on
                     <span className="font-semibold">
-                      {placementInstructions.nextActionDate}
+                      &nbsp;{placementInstructions.nextActionDate}
                     </span>
                   </div>
                 )}
@@ -247,10 +238,10 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
           <Button
             type="submit"
-            disabled={!gramsLogged || isLoading}
+            disabled={!gramsLogged || isLoading || isSubmitting}
             className="w-full bg-gradient-to-r from-retro-600 to-retro-500 hover:from-retro-700 hover:to-retro-600 text-white shadow-lg disabled:opacity-50"
           >
-            {isLoading
+            {isLoading || isSubmitting
               ? "Logging..."
               : isOffSchedule
                 ? `Log Off-Schedule Harvest (${dayName})`

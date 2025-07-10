@@ -105,11 +105,17 @@ export function TrendsChart({ data, isLoading = false }: TrendsChartProps) {
                 dataKey="formattedDate"
                 tick={{ fontSize: 12, fill: "#7c2d92" }}
                 axisLine={{ stroke: "#a855f7" }}
+                tickLine={true}
+                orientation="bottom"
+                type="category"
               />
               <YAxis
                 tick={{ fontSize: 12, fill: "#7c2d92" }}
                 axisLine={{ stroke: "#a855f7" }}
                 tickFormatter={(value) => `${value}g`}
+                tickLine={true}
+                orientation="left"
+                type="number"
               />
               <Tooltip content={<CustomTooltip />} />
               <Line
