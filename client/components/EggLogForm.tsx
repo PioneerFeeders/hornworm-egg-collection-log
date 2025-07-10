@@ -51,28 +51,6 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
 
     setIsSubmitting(true);
 
-<<<<<<< HEAD
-    // Submit to local storage (existing functionality)
-    onSubmit(entry);
-
-    // Also submit to Netlify forms if deployed
-    try {
-      const formData = new FormData(e.target as HTMLFormElement);
-
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
-      });
-    } catch (error) {
-      // Silently fail for local development
-      console.log("Netlify form submission not available in development");
-    }
-
-    // Reset form
-    setGramsLogged("");
-    setNotes("");
-=======
     try {
       const entry = {
         date: date.toISOString(),
@@ -81,7 +59,22 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
         notes: notes.trim() || undefined,
       };
 
+      // Submit to local storage (existing functionality)
       await onSubmit(entry);
+
+      // Also submit to Netlify forms if deployed
+      try {
+        const formData = new FormData(e.target as HTMLFormElement);
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(formData as any).toString(),
+        });
+      } catch (netlifyError) {
+        // Silently fail for local development
+        console.log("Netlify form submission not available in development");
+      }
 
       // Reset form only on successful submission
       setGramsLogged("");
@@ -92,7 +85,6 @@ export function EggLogForm({ onSubmit, isLoading = false }: EggLogFormProps) {
     } finally {
       setIsSubmitting(false);
     }
->>>>>>> 60ee1e835dcd44c236a6044d88e575476101cdfa
   };
 
   const gramsValue = parseFloat(gramsLogged) || 0;
