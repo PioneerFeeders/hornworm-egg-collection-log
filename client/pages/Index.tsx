@@ -105,6 +105,7 @@ export default function Index() {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <SyncStatus />
               <Badge
                 variant="outline"
                 className="bg-retro-50 text-retro-700 border-retro-300"
