@@ -16,6 +16,7 @@ import { WeeklyStats } from "@/components/WeeklyStats";
 import { TabsSection } from "@/components/TabsSection";
 import { NetlifyForms } from "@/components/NetlifyForms";
 import { SyncStatus } from "@/components/SyncStatus";
+import { CloudSyncBanner } from "@/components/CloudSyncBanner";
 import { useEggLogData } from "@/hooks/use-egg-log-data";
 import { formatNumber, formatGrams } from "@/lib/waxworm-utils";
 
