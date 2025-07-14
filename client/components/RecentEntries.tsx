@@ -34,16 +34,26 @@ export function RecentEntries({
     setIsEditModalOpen(true);
   };
 
-  const handleSaveEdit = (updatedEntry: EggLogEntry) => {
-    onEdit(updatedEntry);
-    setIsEditModalOpen(false);
-    setEditingEntry(null);
+  const handleSaveEdit = async (updatedEntry: EggLogEntry) => {
+    try {
+      await onEdit(updatedEntry);
+      setIsEditModalOpen(false);
+      setEditingEntry(null);
+    } catch (error) {
+      console.error("Failed to save edit:", error);
+      // Keep modal open so user can retry
+    }
   };
 
-  const handleDeleteEdit = (id: string) => {
-    onDelete(id);
-    setIsEditModalOpen(false);
-    setEditingEntry(null);
+  const handleDeleteEdit = async (id: string) => {
+    try {
+      await onDelete(id);
+      setIsEditModalOpen(false);
+      setEditingEntry(null);
+    } catch (error) {
+      console.error("Failed to delete entry:", error);
+      // Keep modal open so user can retry
+    }
   };
 
   const recentEntries = entries
