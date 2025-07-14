@@ -86,14 +86,13 @@ export function useEggLogData() {
     return unsubscribe;
   }, []);
 
-  // Save entries to localStorage whenever they change
+  // Keep localStorage as backup sync
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
     }
   }, [entries, isLoading]);
 
-  // Save goals to localStorage whenever they change
   useEffect(() => {
     if (!isLoading) {
       localStorage.setItem(GOAL_STORAGE_KEY, JSON.stringify(goalSettings));
