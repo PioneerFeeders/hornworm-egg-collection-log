@@ -194,23 +194,45 @@ export function useEggLogData() {
   }, [entries]);
 
   // Edit entry
-  const editEntry = useCallback((updatedEntry: EggLogEntry) => {
-    setEntries((prev) =>
-      prev.map((entry) =>
-        entry.id === updatedEntry.id ? updatedEntry : entry,
-      ),
-    );
-    console.log("✅ Entry updated successfully:", updatedEntry);
+  const editEntry = useCallback(async (updatedEntry: EggLogEntry) => {
+    try {
+      console.log("☁️ Updating entry in cloud...", updatedEntry);
+
+      // Update in cloud first
+      await cloudDataService.updateEggLog(updatedEntry);
+
+      // Update local state
+      setEntries((prev) =>
+        prev.map((entry) =>
+          entry.id === updatedEntry.id ? updatedEntry : entry,
+        ),
+      );
+      console.log("✅ Entry updated successfully:", updatedEntry);
+    } catch (error) {
+      console.error("❌ Failed to update entry in cloud:", error);
+      throw error;
+    }
   }, []);
 
   // Delete entry
   const deleteEntry = useCallback(
-    (id: string) => {
-      const entryToDelete = entries.find((entry) => entry.id === id);
-      if (!entryToDelete) return;
+    async (id: string) => {
+      try {
+        const entryToDelete = entries.find((entry) => entry.id === id);
+        if (!entryToDelete) return;
 
-      setEntries((prev) => prev.filter((entry) => entry.id !== id));
-      console.log("✅ Entry deleted successfully:", entryToDelete);
+        console.log("☁️ Deleting entry from cloud...", id);
+
+        // Delete from cloud first
+        await cloudDataService.deleteEggLog(id);
+
+        // Update local state
+        setEntries((prev) => prev.filter((entry) => entry.id !== id));
+        console.log("✅ Entry deleted successfully:", entryToDelete);
+      } catch (error) {
+        console.error("❌ Failed to delete entry from cloud:", error);
+        throw error;
+      }
     },
     [entries],
   );
