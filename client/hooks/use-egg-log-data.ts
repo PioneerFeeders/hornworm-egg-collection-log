@@ -7,6 +7,7 @@ import {
   calculateWeeklyStats,
   generateTrendData,
 } from "@/lib/waxworm-utils";
+import { cloudDataService } from "@/lib/cloud-data-service";
 
 const STORAGE_KEY = "waxworm_egg_logs";
 const GOAL_STORAGE_KEY = "waxworm_goals";
