@@ -28,24 +28,29 @@ export function GoalSetting({
   const handleSave = async () => {
     const goal = parseFloat(goalInput) || 0;
 
-    // Save to local storage (existing functionality)
-    onSave(goal);
-    setHasChanges(false);
-
-    // Also submit to Netlify forms if deployed
     try {
-      const formData = new FormData();
-      formData.append("form-name", "weekly-goal");
-      formData.append("goal", goal.toString());
+      // Save to cloud (this also updates local state)
+      await onSave(goal);
+      setHasChanges(false);
 
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
-      });
+      // Also submit to Netlify forms if deployed
+      try {
+        const formData = new FormData();
+        formData.append("form-name", "weekly-goal");
+        formData.append("goal", goal.toString());
+
+        await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(formData as any).toString(),
+        });
+      } catch (netlifyError) {
+        // Silently fail for local development
+        console.log("Netlify form submission not available in development");
+      }
     } catch (error) {
-      // Silently fail for local development
-      console.log("Netlify form submission not available in development");
+      console.error("Failed to save goal:", error);
+      // Keep changes visible so user can retry
     }
   };
 
