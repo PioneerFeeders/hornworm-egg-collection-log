@@ -129,6 +129,9 @@ export default function Index() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Cloud Sync Banner */}
+        <CloudSyncBanner />
+
         {/* Collection Form - Moved to Top */}
         <div className="mb-8">
           <EggLogForm onSubmit={addEntry} />
