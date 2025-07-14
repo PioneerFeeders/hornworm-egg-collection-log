@@ -135,15 +135,36 @@ export function useEggLogData() {
   );
 
   // Update goal
-  const updateGoal = useCallback((weeklyGoalGrams: number) => {
-    const newGoal: GoalSettings = {
-      weeklyGoalGrams,
-      weeklyGoalEggs: Math.round(weeklyGoalGrams * 650),
-      isActive: weeklyGoalGrams > 0,
-    };
+  const updateGoal = useCallback(async (weeklyGoalGrams: number) => {
+    try {
+      console.log("☁️ Updating goal in cloud...", weeklyGoalGrams);
 
-    setGoalSettings(newGoal);
-    return newGoal;
+      // Update in cloud first
+      const cloudGoal =
+        await cloudDataService.updateGoalSettings(weeklyGoalGrams);
+
+      // Update local state
+      const newGoal: GoalSettings = {
+        weeklyGoalGrams: cloudGoal.weeklyGoalGrams,
+        weeklyGoalEggs: cloudGoal.weeklyGoalEggs,
+        isActive: weeklyGoalGrams > 0,
+      };
+
+      setGoalSettings(newGoal);
+      console.log("✅ Goal updated successfully:", newGoal);
+      return newGoal;
+    } catch (error) {
+      console.error("❌ Failed to update goal in cloud:", error);
+
+      // Fallback to local-only
+      const newGoal: GoalSettings = {
+        weeklyGoalGrams,
+        weeklyGoalEggs: Math.round(weeklyGoalGrams * 650),
+        isActive: weeklyGoalGrams > 0,
+      };
+      setGoalSettings(newGoal);
+      throw error;
+    }
   }, []);
 
   // Get current week stats
