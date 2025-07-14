@@ -21,36 +21,69 @@ export function useEggLogData() {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load data from localStorage on mount
+  // Load data from cloud service on mount
   useEffect(() => {
-    try {
-      const savedEntries = localStorage.getItem(STORAGE_KEY);
-      const savedGoals = localStorage.getItem(GOAL_STORAGE_KEY);
+    const loadCloudData = async () => {
+      try {
+        console.log("☁️ Loading data from cloud...");
 
-      if (savedEntries) {
-        const parsedEntries = JSON.parse(savedEntries);
-        setEntries(parsedEntries);
-      } else {
-        // Initialize with empty array for first-time users
-        setEntries([]);
-      }
+        // Load entries and goals from cloud
+        const [cloudEntries, cloudGoals] = await Promise.all([
+          cloudDataService.getEggLogs(),
+          cloudDataService.getGoalSettings(),
+        ]);
 
-      if (savedGoals) {
-        setGoalSettings(JSON.parse(savedGoals));
-      } else {
-        // Set a default weekly goal
-        const defaultGoal: GoalSettings = {
-          weeklyGoalGrams: 15,
-          weeklyGoalEggs: 9750,
-          isActive: true,
-        };
-        setGoalSettings(defaultGoal);
+        setEntries(cloudEntries);
+
+        if (cloudGoals.weeklyGoalGrams > 0) {
+          setGoalSettings({
+            weeklyGoalGrams: cloudGoals.weeklyGoalGrams,
+            weeklyGoalEggs: cloudGoals.weeklyGoalEggs,
+            isActive: cloudGoals.weeklyGoalGrams > 0,
+          });
+        } else {
+          // Set a default weekly goal if none exists
+          const defaultGoal: GoalSettings = {
+            weeklyGoalGrams: 15,
+            weeklyGoalEggs: 9750,
+            isActive: true,
+          };
+          setGoalSettings(defaultGoal);
+          await cloudDataService.updateGoalSettings(15);
+        }
+
+        console.log("☁️ Cloud data loaded successfully");
+      } catch (error) {
+        console.error("❌ Error loading cloud data:", error);
+
+        // Fallback to localStorage if cloud fails
+        try {
+          const savedEntries = localStorage.getItem(STORAGE_KEY);
+          const savedGoals = localStorage.getItem(GOAL_STORAGE_KEY);
+
+          if (savedEntries) {
+            setEntries(JSON.parse(savedEntries));
+          }
+          if (savedGoals) {
+            setGoalSettings(JSON.parse(savedGoals));
+          }
+        } catch (localError) {
+          console.error("❌ Fallback to localStorage also failed:", localError);
+        }
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading saved data:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    };
+
+    loadCloudData();
+
+    // Subscribe to real-time updates
+    const unsubscribe = cloudDataService.subscribe(() => {
+      console.log("🔄 Real-time update received, refreshing data...");
+      loadCloudData();
+    });
+
+    return unsubscribe;
   }, []);
 
   // Save entries to localStorage whenever they change
