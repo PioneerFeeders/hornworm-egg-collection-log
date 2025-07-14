@@ -101,40 +101,35 @@ export function useEggLogData() {
 
   // Add new entry
   const addEntry = useCallback(
-    (entryData: Omit<EggLogEntry, "id" | "createdAt">) => {
-      const newEntry: EggLogEntry = {
-        ...entryData,
-        id: generateId(),
-        createdAt: new Date().toISOString(),
-      };
+    async (entryData: Omit<EggLogEntry, "id" | "createdAt">) => {
+      try {
+        console.log("☁️ Adding entry to cloud...", entryData);
 
-      setEntries((prev) => {
-        // Check for potential duplicates (same date and grams within 1 second)
-        const recentDuplicate = prev.find(
-          (entry) =>
-            Math.abs(
-              new Date(entry.createdAt).getTime() -
-                new Date(newEntry.createdAt).getTime(),
-            ) < 1000 &&
-            entry.gramsLogged === newEntry.gramsLogged &&
-            entry.date.split("T")[0] === newEntry.date.split("T")[0],
-        );
+        // Add to cloud first
+        const newEntry = await cloudDataService.addEggLog(entryData);
 
-        if (recentDuplicate) {
-          console.warn(
-            "⚠️ Potential duplicate entry detected, skipping:",
-            newEntry,
-          );
-          return prev;
-        }
+        // Update local state
+        setEntries((prev) => {
+          const updated = [...prev, newEntry];
+          console.log("✅ Entry added successfully:", newEntry);
+          console.log("📊 Total entries now:", updated.length);
+          return updated;
+        });
 
-        const updated = [...prev, newEntry];
-        console.log("✅ Entry added successfully:", newEntry);
-        console.log("📊 Total entries now:", updated.length);
-        return updated;
-      });
+        return newEntry;
+      } catch (error) {
+        console.error("❌ Failed to add entry to cloud:", error);
 
-      return newEntry;
+        // Fallback to local-only if cloud fails
+        const newEntry: EggLogEntry = {
+          ...entryData,
+          id: generateId(),
+          createdAt: new Date().toISOString(),
+        };
+
+        setEntries((prev) => [...prev, newEntry]);
+        throw error; // Re-throw to handle in UI
+      }
     },
     [],
   );
